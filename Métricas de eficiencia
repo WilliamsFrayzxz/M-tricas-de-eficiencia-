@@ -1,0 +1,80 @@
+import random
+import time
+
+def busqueda_lineal(array, numero):
+    inicio = time.time()
+    iteraciones = 0
+    for i in range(len(array)):
+        iteraciones += 1
+        if array[i] == numero:
+            fin = time.time()
+            return i, inicio, fin, iteraciones
+    fin = time.time()
+    return -1, inicio, fin, iteraciones
+
+# Generar 50 resultados con tamaños de array crecientes
+resultados = []
+tamaño_inicial = 100
+incremento = 100
+
+for i in range(50):
+    tamaño_array = tamaño_inicial + (i * incremento)
+    array = [random.randint(0, 100) for _ in range(tamaño_array)]
+    numero_a_buscar = random.randint(0, 100)
+    
+    resultado, inicio, fin, iteraciones = busqueda_lineal(array, numero_a_buscar)
+    
+    if resultado != -1:
+        resultado_str = f"El número {numero_a_buscar} se encuentra en la posición {resultado}."
+    else:
+        resultado_str = f"El número {numero_a_buscar} no se encuentra en el array."
+    
+    resultado_str += f"\nTamaño del array: {tamaño_array}"
+    resultado_str += f"\nTiempo de inicio: {inicio}"
+    resultado_str += f"\nTiempo de fin: {fin}"
+    resultado_str += f"\nTiempo total: {fin - inicio} segundos"
+    resultado_str += f"\nNúmero de iteraciones: {iteraciones}"
+    resultados.append(resultado_str)
+
+# Imprimir los 50 resultados
+for idx, resultado in enumerate(resultados, 1):
+    print(f"Resultado {idx}:")
+    print(resultado)
+    print("\n" + "-"*40 + "\n")
+    
+   
+import matplotlib.pyplot as plt
+
+# Crear listas para almacenar los datos del gráfico
+tamaños_array = []
+tiempos_totales = []
+iteraciones = []
+
+# Obtener los datos del volumen, tiempo y tiempo de iteración de cada resultado
+for resultado in resultados:
+    tamaño_array = int(resultado.split("Tamaño del array: ")[1].split("\n")[0])
+    tiempo_total = float(resultado.split("Tiempo total: ")[1].split(" segundos")[0])
+    num_iteraciones = int(resultado.split("Número de iteraciones: ")[1])
+    
+    tamaños_array.append(tamaño_array)
+    tiempos_totales.append(tiempo_total)
+    iteraciones.append(num_iteraciones)
+
+# Crear el gráfico
+plt.figure(figsize=(10, 6))
+plt.subplot(2, 1, 1)
+plt.plot(tamaños_array, tiempos_totales, marker='o')
+plt.title('Volumen vs Tiempo Total')
+plt.xlabel('Tamaño del Array')
+plt.ylabel('Tiempo Total (segundos)')
+
+plt.subplot(2, 1, 2)
+plt.plot(tamaños_array, iteraciones, marker='o')
+plt.title('Volumen vs Número de Iteraciones')
+plt.xlabel('Tamaño del Array')
+plt.ylabel('Número de Iteraciones')
+
+plt.tight_layout()
+plt.show()
+
+
